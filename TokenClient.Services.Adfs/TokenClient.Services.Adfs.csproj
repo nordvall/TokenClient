@@ -50,7 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdfsOAuth2Service.cs" />
+    <Compile Include="AdfsConstants.cs" />
+    <Compile Include="OAuth2\AdfsAuthorizationCodeFlow.cs" />
+    <Compile Include="OAuth2\AdfsClientCredentialsFlow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

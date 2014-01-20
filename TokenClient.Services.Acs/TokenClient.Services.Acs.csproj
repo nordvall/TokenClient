@@ -51,8 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcsConstants.cs" />
+    <Compile Include="OAuth2\AcsAuthorizationCodeFlow.cs" />
     <Compile Include="OAuth2\AcsClientCredentialsFlow.cs" />
-    <Compile Include="AcsOAuth2Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

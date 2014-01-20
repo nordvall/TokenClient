@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
+# Visual Studio Express 2013 for Web
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Protocols.OAuth2", "TokenClient.Protocols.OAuth2\TokenClient.Protocols.OAuth2.csproj", "{7DB1ACE4-D525-4411-A7EB-B25325DCE9BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Services.AzureAD", "TokenClient.Services.AzureAD\TokenClient.Services.AzureAD.csproj", "{8702B2CE-A35E-4914-927B-0F7F23FE6EAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Services.AzureAd", "TokenClient.Services.AzureAD\TokenClient.Services.AzureAd.csproj", "{8702B2CE-A35E-4914-927B-0F7F23FE6EAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Services.Adfs", "TokenClient.Services.Adfs\TokenClient.Services.Adfs.csproj", "{7C8214D9-D16D-459B-83F6-82DA065F0BED}"
 EndProject

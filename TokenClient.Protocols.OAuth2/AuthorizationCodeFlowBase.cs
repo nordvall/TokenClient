@@ -97,10 +97,10 @@ namespace TokenClient.Protocols.OAuth2
 
         public SecurityToken GetAccessToken()
         {
-            HttpContent content = CreateAccessTokenRequest();
-            Uri tokenEndpoint = GetTokenRequestEndpoint();
+            Dictionary<string, string> parameters = CreateAccessTokenRequestParameters();
+            HttpContent content = new FormUrlEncodedContent(parameters);
             
-            HttpResponseMessage response = HttpClient.PostAsync(tokenEndpoint, content).Result;
+            HttpResponseMessage response = HttpClient.PostAsync(TokenRequestEndpoint, content).Result;
 
             ThrowIfErrorResponse(response);
 
@@ -110,7 +110,7 @@ namespace TokenClient.Protocols.OAuth2
             return token;
         }
 
-        protected virtual HttpContent CreateAccessTokenRequest()
+        protected virtual Dictionary<string, string> CreateAccessTokenRequestParameters()
         {
             var formParameters = new Dictionary<string, string>(4)
             {
@@ -120,12 +120,12 @@ namespace TokenClient.Protocols.OAuth2
                 {"code", _accessCode}
             };
 
-            return new FormUrlEncodedContent(formParameters);
+            return formParameters;
         }
 
-        protected virtual Uri GetTokenRequestEndpoint()
+        protected virtual Uri TokenRequestEndpoint
         {
-            return new Uri(_serviceUri, "token");
+            get { return new Uri(_serviceUri, "token"); }
         }
     }
 }

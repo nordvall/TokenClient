@@ -6,19 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using TokenClient.Protocols.OAuth2;
 
-namespace TokenClient.Services.Acs.OAuth2
+namespace TokenClient.Services.Adfs.OAuth2
 {
-    public class AcsClientCredentialsFlow : ClientCredentialsFlowBase
+    public class AdfsClientCredentialsFlow : ClientCredentialsFlowBase
     {
-        public AcsClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters)
+        public AdfsClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters)
             : base(serviceUri, credentials, parameters)
         {
 
         }
-
         protected override Uri TokenEndpoint
         {
-            get { return new Uri(_serviceUri, AcsConstants.OAuthUrlPath); }
+            get { return new Uri(_serviceUri, AdfsConstants.OAuthUrlPath); }
         }
 
         protected override Dictionary<string,string> CreateAccessTokenRequestParameters()

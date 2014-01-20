@@ -7,8 +7,8 @@
     <ProjectGuid>{8702B2CE-A35E-4914-927B-0F7F23FE6EAB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TokenClient.Services.AzureAD</RootNamespace>
-    <AssemblyName>TokenClient.Services.AzureAD</AssemblyName>
+    <RootNamespace>TokenClient.Services.AzureAd</RootNamespace>
+    <AssemblyName>TokenClient.Services.AzureAd</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -51,7 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AzureActiveDirectoryOAuth2Service.cs" />
+    <Compile Include="AzureAdConstants.cs" />
+    <Compile Include="OAuth2\AzureAdAuthorizationCodeFlow.cs" />
+    <Compile Include="OAuth2\AzureAdClientCredentialsFlow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

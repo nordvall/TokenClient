@@ -20,8 +20,16 @@ namespace TokenClient.Protocols.OAuth2
             Scope = scope;
         }
 
+        /// <summary>
+        /// The requested access level
+        /// </summary>
         public string Scope { get; private set; }
+
+        /// <summary>
+        /// The target resource
+        /// </summary>
         public string Resource { get; private set; }
+
         public Uri RedirectUri { get; private set; }
     }
 }

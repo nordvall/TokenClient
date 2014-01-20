@@ -55,8 +55,6 @@
     <Compile Include="AuthorizationCodeFlowBase.cs" />
     <Compile Include="ClientCredentials.cs" />
     <Compile Include="ClientCredentialsFlowBase.cs" />
-    <Compile Include="IAuthorizationCodeService.cs" />
-    <Compile Include="IClientCredentialsService.cs" />
     <Compile Include="OAuth2Flow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestParameters.cs" />
