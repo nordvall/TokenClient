@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TokenClient.Common;
 using TokenClient.Protocols.OAuth2;
 
-namespace TokenClient.ACS
+namespace TokenClient.Services.Acs
 {
     public class AcsOAuth2Service : IClientCredentialsService, IAuthorizationCodeService
     {
         private Uri _baseUri;
-        
+        private const string _swtTokenType = "http://schemas.xmlsoap.org/ws/2009/11/swt-token-profile-1.0";
+        private const string _jwtTokenType = "urn:ietf:params:oauth:token-type:jwt";
+
         public AcsOAuth2Service(Uri baseUri)
         {
             _baseUri = baseUri;
@@ -22,7 +27,7 @@ namespace TokenClient.ACS
             get
             {
                 var builder = new UriBuilder(_baseUri);
-                builder.Path += "/v2/oauth2-13/";
+                builder.Path += "v2/oauth2-13/";
                 return builder.Uri;
             }
         }
@@ -32,22 +37,23 @@ namespace TokenClient.ACS
             get
             {
                 var builder = new UriBuilder(_baseUri);
-                builder.Path += "/v2/oauth2-13/";
+                builder.Path += "v2/oauth2-13/";
                 return builder.Uri;
             }
         }
 
-        public HttpContent CreateClientCredentialsAccessTokenRequest(ClientCredentials credentials, string scope)
+        public HttpContent CreateClientCredentialsAccessTokenRequest(ClientCredentials credentials, RequestParameters parameters)
         {
-            var parameters = new Dictionary<string, string>()
+
+            var formParameters = new Dictionary<string, string>()
             {
                 {"grant_type", "client_credentials"},
                 {"client_id", credentials.ClientId},
                 {"client_secret", credentials.ClientSecret},
-                {"scope", scope}
+                {"scope", parameters.Resource}
             };
 
-            return new FormUrlEncodedContent(parameters);
+            return new FormUrlEncodedContent(formParameters);
         }
 
 
@@ -76,6 +82,24 @@ namespace TokenClient.ACS
             Uri authorizeUri = urlBuilder.Build();
 
             return authorizeUri;
+        }
+
+
+        public void ValidateHttpResponse(HttpResponseMessage response)
+        {
+            
+        }
+
+
+        public SecurityToken CreateAccessToken(AccessTokenResponse tokenResponse)
+        {
+            switch (tokenResponse.TokenType)
+            {
+                case _jwtTokenType:
+                    return new JwtSecurityToken(tokenResponse.AccessToken);
+                default:
+                    throw new Exception("Unsupported token type");
+            }
         }
     }
 }

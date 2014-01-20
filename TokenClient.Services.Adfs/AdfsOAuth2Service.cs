@@ -63,5 +63,11 @@ namespace TokenClient.Services.Adfs
 
             return authorizeUri;
         }
+
+
+        public void ValidateHttpResponse(HttpResponseMessage response)
+        {
+            
+        }
     }
 }

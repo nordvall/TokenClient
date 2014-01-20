@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DAB056
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Services.Acs.Tests", "TokenClient.Services.Acs.Tests\TokenClient.Services.Acs.Tests.csproj", "{758B79EE-943B-4655-8929-DDCE99E42FD9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{30F81E97-853E-4B80-A553-A6C79B9180B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30F81E97-853E-4B80-A553-A6C79B9180B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30F81E97-853E-4B80-A553-A6C79B9180B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{758B79EE-943B-4655-8929-DDCE99E42FD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{758B79EE-943B-4655-8929-DDCE99E42FD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{758B79EE-943B-4655-8929-DDCE99E42FD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{758B79EE-943B-4655-8929-DDCE99E42FD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

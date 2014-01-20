@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -44,17 +45,17 @@ namespace TokenClient.Services.AzureAD
             }
         }
 
-        public HttpContent CreateClientCredentialsAccessTokenRequest(ClientCredentials credentials, string scope)
+        public HttpContent CreateClientCredentialsAccessTokenRequest(ClientCredentials credentials, RequestParameters parameters)
         {
-            var parameters = new Dictionary<string, string>()
+            var formParameters = new Dictionary<string, string>()
             {
                 {"grant_type", "client_credentials"},
                 {"client_id", credentials.ClientId},
                 {"client_secret", credentials.ClientSecret},
-                {"resource", scope}
+                {"resource", parameters.Resource}
             };
 
-            return new FormUrlEncodedContent(parameters);
+            return new FormUrlEncodedContent(formParameters);
         }
 
         public HttpContent CreateAccessTokenRequestWithAuthorizationCode(ClientCredentials credentials, RequestParameters parameters, string accessCode)
@@ -84,6 +85,17 @@ namespace TokenClient.Services.AzureAD
             Uri authorizeUri = urlBuilder.Build();
 
             return authorizeUri;
+        }
+
+        public void ValidateHttpResponse(HttpResponseMessage response)
+        {
+            
+        }
+
+
+        public SecurityToken CreateAccessToken(AccessTokenResponse tokenResponse)
+        {
+            throw new NotImplementedException();
         }
     }
 }

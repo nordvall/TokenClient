@@ -13,5 +13,6 @@ namespace TokenClient.Protocols.OAuth2
         Uri TokenEndpoint { get; }
         Uri CreateAuthorizationUrl(ClientCredentials clientCredentials, RequestParameters parameters);
         HttpContent CreateAccessTokenRequestWithAuthorizationCode(ClientCredentials credentials, RequestParameters parameters, string accessCode);
+        void ValidateHttpResponse(HttpResponseMessage response);
     }
 }

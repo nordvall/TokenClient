@@ -11,7 +11,7 @@ using System.Web;
 
 namespace TokenClient.Protocols.OAuth2
 {
-    public class AuthorizationCodeFlow
+    public class AuthorizationCodeFlow : OAuth2Flow
     {
         private IAuthorizationCodeService _service;
         private HttpClient _webClient;
@@ -75,21 +75,10 @@ namespace TokenClient.Protocols.OAuth2
             HttpContent content = _service.CreateAccessTokenRequestWithAuthorizationCode(_clientCredentials, _parameters, _accessCode);
             HttpResponseMessage response = _webClient.PostAsync(_service.TokenEndpoint, content).Result;
 
-            string oauthResponseString = response.Content.ReadAsStringAsync().Result;
+            AccessTokenResponse tokenResponse = ParseAccessTokenResponse(response);
+            var token = new JwtSecurityToken(tokenResponse.AccessToken);
 
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                AccessTokenErrorResponse oauthResponse = JsonConvert.DeserializeObject<AccessTokenErrorResponse>(oauthResponseString);
-
-                throw new Exception(oauthResponse.Description);
-            }
-            else
-            {
-                AccessTokenResponse oauthResponse = JsonConvert.DeserializeObject<AccessTokenResponse>(oauthResponseString);
-                var token = new JwtSecurityToken(oauthResponse.AccessToken);
-
-                return token;
-            }
+            return token;
         }
     }
 }

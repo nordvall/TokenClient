@@ -9,42 +9,40 @@ using System.Threading.Tasks;
 
 namespace TokenClient.Protocols.OAuth2
 {
-    public class ClientCredentialsFlow
+    public class ClientCredentialsFlow : OAuth2Flow
     {
         private IClientCredentialsService _service;
         protected HttpClient _webClient;
         private ClientCredentials _credentials;
-        private string _scope;
+        private RequestParameters _parameters;
 
-        public ClientCredentialsFlow(ClientCredentials credentials, string scope, IClientCredentialsService service)
+        public ClientCredentialsFlow(ClientCredentials credentials, RequestParameters parameters, IClientCredentialsService service)
+            : this(credentials, parameters, service, new HttpClientHandler())
         {
-            _credentials = credentials;
-            _scope = scope;
-            _service = service;
 
-            _webClient = new HttpClient();
         }
 
-        public JwtSecurityToken RequestAccessToken()
+        public ClientCredentialsFlow(ClientCredentials credentials, RequestParameters parameters, IClientCredentialsService service, HttpMessageHandler httpHandler)
         {
-            HttpContent content = _service.CreateClientCredentialsAccessTokenRequest(_credentials,_scope);
-            HttpResponseMessage response = _webClient.PostAsync(_service.TokenEndpoint, content).Result;
+            _credentials = credentials;
+            _parameters = parameters;
+            _service = service;
 
-            string oauthResponseString = response.Content.ReadAsStringAsync().Result;
+            _webClient = new HttpClient(httpHandler);
+        }
 
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                AccessTokenErrorResponse oauthResponse = JsonConvert.DeserializeObject<AccessTokenErrorResponse>(oauthResponseString);
-                
-                throw new Exception(oauthResponse.Description);
-            }
-            else
-            {
-                AccessTokenResponse oauthResponse = JsonConvert.DeserializeObject<AccessTokenResponse>(oauthResponseString);
-                var token = new JwtSecurityToken(oauthResponse.AccessToken);
+        public SecurityToken RequestAccessToken()
+        {
+            HttpContent content = _service.CreateClientCredentialsAccessTokenRequest(_credentials, _parameters);
+            HttpResponseMessage httpResponse = _webClient.PostAsync(_service.TokenEndpoint, content).Result;
 
-                return token;
-            }
+            _service.ValidateHttpResponse(httpResponse);
+
+            AccessTokenResponse tokenResponse = ParseAccessTokenResponse(httpResponse);
+
+            SecurityToken token = _service.CreateAccessToken(tokenResponse);
+
+            return token;
         }
     }
 }
