@@ -39,7 +39,7 @@ namespace TokenClient.Services.Acs.Tests
             HttpResponseMessage response = CreateJwtTokenResponse(token);
             var httpHandler = new FakeHttpHandler(response);
             
-            var flow = new ClientCredentialsFlow(_credentials, _requestParameters, _service, httpHandler);
+            var flow = new ClientCredentialsFlowBase(_credentials, _requestParameters, _service, httpHandler);
             flow.RequestAccessToken();
 
             HttpRequestMessage request = httpHandler.ReceivedRequests.Single();
@@ -54,7 +54,7 @@ namespace TokenClient.Services.Acs.Tests
             HttpResponseMessage response = CreateJwtTokenResponse(token);
             var httpHandler = new FakeHttpHandler(response);
 
-            var flow = new ClientCredentialsFlow(_credentials, _requestParameters, _service, httpHandler);
+            var flow = new ClientCredentialsFlowBase(_credentials, _requestParameters, _service, httpHandler);
             flow.RequestAccessToken();
 
             HttpRequestMessage request = httpHandler.ReceivedRequests.Single();
@@ -74,7 +74,7 @@ namespace TokenClient.Services.Acs.Tests
             HttpResponseMessage response = CreateJwtTokenResponse(preparedToken);
             var httpHandler = new FakeHttpHandler(response);
 
-            var flow = new ClientCredentialsFlow(_credentials, _requestParameters, _service, httpHandler);
+            var flow = new ClientCredentialsFlowBase(_credentials, _requestParameters, _service, httpHandler);
             JwtSecurityToken receivedToken = flow.RequestAccessToken() as JwtSecurityToken;
 
             Assert.AreEqual(preparedToken.Audience, receivedToken.Audience);
@@ -91,7 +91,7 @@ namespace TokenClient.Services.Acs.Tests
             HttpResponseMessage response = CreateErrorResponse(HttpStatusCode.BadRequest, "invalid_request", errorDescription);
             var httpHandler = new FakeHttpHandler(response);
 
-            var flow = new ClientCredentialsFlow(_credentials, _requestParameters, _service, httpHandler);
+            var flow = new ClientCredentialsFlowBase(_credentials, _requestParameters, _service, httpHandler);
             
             Exception ex = Assert.Throws<Exception>(() => flow.RequestAccessToken());
 

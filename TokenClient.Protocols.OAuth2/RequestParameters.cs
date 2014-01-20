@@ -8,13 +8,7 @@ namespace TokenClient.Protocols.OAuth2
 {
     public class RequestParameters
     {
-        private RequestParameters()
-        {
-            State = Guid.NewGuid().ToString("N");
-        }
-
         public RequestParameters(Uri redirectUri)
-            : this()
         {
             RedirectUri = redirectUri;
         }
@@ -26,7 +20,6 @@ namespace TokenClient.Protocols.OAuth2
             Scope = scope;
         }
 
-        public string State { get; private set; }
         public string Scope { get; private set; }
         public string Resource { get; private set; }
         public Uri RedirectUri { get; private set; }

@@ -37,7 +37,7 @@ namespace TokenClient.Services.Acs
             get
             {
                 var builder = new UriBuilder(_baseUri);
-                builder.Path += "v2/oauth2-13/";
+                builder.Path += "/v2/oauth2-13/";
                 return builder.Uri;
             }
         }
