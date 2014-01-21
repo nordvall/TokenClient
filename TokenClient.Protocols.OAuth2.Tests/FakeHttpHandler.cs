@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TokenClient.Services.Acs.Tests
+namespace TokenClient.Protocols.OAuth2.Tests
 {
     public class FakeHttpHandler : HttpMessageHandler
     {

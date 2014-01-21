@@ -54,6 +54,7 @@
     <Compile Include="AuthorizationCodeFlowBase.cs" />
     <Compile Include="ClientCredentials.cs" />
     <Compile Include="ClientCredentialsFlowBase.cs" />
+    <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="OAuthHttpAdapter.cs" />
     <Compile Include="IOAuthHttpAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

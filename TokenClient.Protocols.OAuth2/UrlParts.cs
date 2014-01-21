@@ -29,7 +29,15 @@ namespace TokenClient.Protocols.OAuth2
         
         private void StoreUriValues(Uri uri)
         {
-            ProtocolAndHost = string.Format("{0}://{1}", uri.Scheme, uri.Host);
+            if (uri.IsDefaultPort)
+            {
+                ProtocolAndHost = string.Format("{0}://{1}", uri.Scheme, uri.Host);
+            }
+            else
+            {
+                ProtocolAndHost = string.Format("{0}://{1}:{2}", uri.Scheme, uri.Host, uri.Port);
+            }
+
             Path = uri.AbsolutePath;
 
             NameValueCollection urlParameters = HttpUtility.ParseQueryString(uri.Query);
