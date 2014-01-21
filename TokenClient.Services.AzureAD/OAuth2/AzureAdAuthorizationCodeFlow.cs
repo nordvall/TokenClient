@@ -23,7 +23,7 @@ namespace TokenClient.Services.AzureAd.OAuth2
 
         protected override Uri TokenRequestEndpoint
         {
-            get { return new Uri(_serviceUri, AzureAdConstants.OAuthUrlPath); }
+            get { return new Uri(_serviceUri, AzureAdConstants.OAuthTokenPath); }
         }
 
         protected override Dictionary<string, string> GetAuthorizationRequestParameters()

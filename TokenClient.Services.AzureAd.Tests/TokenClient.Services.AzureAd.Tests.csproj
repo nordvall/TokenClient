@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{758B79EE-943B-4655-8929-DDCE99E42FD9}</ProjectGuid>
+    <ProjectGuid>{25CC06AF-2926-4CD1-A304-9214616F1353}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TokenClient.Services.Acs.Tests</RootNamespace>
-    <AssemblyName>TokenClient.Services.Acs.Tests</AssemblyName>
+    <RootNamespace>TokenClient.Services.AzureAd.Tests</RootNamespace>
+    <AssemblyName>TokenClient.Services.AzureAd.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -32,8 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NSubstitute">
@@ -45,12 +44,10 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IdentityModel" />
-    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.IdentityModel.Tokens.Jwt">
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.3.0.0\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,7 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AcsClientCredentialsFlowTests.cs" />
+    <Compile Include="OAuth2\AzureAdClientCredentialsFlowTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,9 +67,9 @@
       <Project>{7db1ace4-d525-4411-a7eb-b25325dce9bb}</Project>
       <Name>TokenClient.Protocols.OAuth2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TokenClient.Services.Acs\TokenClient.Services.Acs.csproj">
-      <Project>{92ddd3ae-0cdb-43aa-862a-e9acc52dba50}</Project>
-      <Name>TokenClient.Services.Acs</Name>
+    <ProjectReference Include="..\TokenClient.Services.AzureAD\TokenClient.Services.AzureAd.csproj">
+      <Project>{8702b2ce-a35e-4914-927b-0f7f23fe6eab}</Project>
+      <Name>TokenClient.Services.AzureAd</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

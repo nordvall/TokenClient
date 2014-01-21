@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Services.Acs.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Protocols.OAuth2.Tests", "TokenClient.Protocols.OAuth2.Tests\TokenClient.Protocols.OAuth2.Tests.csproj", "{54EEF63F-2E31-42E8-8760-21B5DA63F016}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Services.AzureAd.Tests", "TokenClient.Services.AzureAd.Tests\TokenClient.Services.AzureAd.Tests.csproj", "{25CC06AF-2926-4CD1-A304-9214616F1353}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{54EEF63F-2E31-42E8-8760-21B5DA63F016}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54EEF63F-2E31-42E8-8760-21B5DA63F016}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54EEF63F-2E31-42E8-8760-21B5DA63F016}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25CC06AF-2926-4CD1-A304-9214616F1353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25CC06AF-2926-4CD1-A304-9214616F1353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25CC06AF-2926-4CD1-A304-9214616F1353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25CC06AF-2926-4CD1-A304-9214616F1353}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

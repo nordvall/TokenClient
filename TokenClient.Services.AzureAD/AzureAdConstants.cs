@@ -8,6 +8,7 @@ namespace TokenClient.Services.AzureAd
 {
     class AzureAdConstants
     {
-        public const string OAuthUrlPath = "AzureAd/oauth2/authorize";
+        public const string OAuthAuthorizationPath = "oauth2/authorize";
+        public const string OAuthTokenPath = "oauth2/token";
     }
 }

@@ -13,6 +13,17 @@ namespace TokenClient.Services.AzureAd.OAuth2
         public AzureAdClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters)
             : base(serviceUri, credentials, parameters)
         {
+            ValidateUri(serviceUri);
+        }
+
+        public AzureAdClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters, IOAuthHttpAdapter httpAdapter)
+            : base(serviceUri, credentials, parameters, httpAdapter)
+        {
+            ValidateUri(serviceUri);
+        }
+
+        private static void ValidateUri(Uri serviceUri)
+        {
             Guid validatedTenantId = Guid.Empty;
 
             if (Guid.TryParse(serviceUri.AbsolutePath, out validatedTenantId))
@@ -23,7 +34,7 @@ namespace TokenClient.Services.AzureAd.OAuth2
 
         protected override Uri TokenEndpoint
         {
-            get { return new Uri(_serviceUri, _serviceUri.AbsolutePath + AzureAdConstants.OAuthUrlPath); }
+            get { return new Uri(_serviceUri, string.Format("{0}/{1}", _serviceUri.AbsolutePath, AzureAdConstants.OAuthTokenPath)); }
         }
 
         protected override Dictionary<string,string> CreateAccessTokenRequestParameters()
