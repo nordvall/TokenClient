@@ -12,14 +12,27 @@ using System.Web;
 
 namespace TokenClient.Protocols.OAuth2
 {
-    public abstract class AuthorizationCodeFlowBase : OAuth2Flow
+    public abstract class AuthorizationCodeFlowBase
     {
         protected string _accessCode;
         private readonly string _state;
+        protected readonly ClientCredentials _clientCredentials;
+        protected readonly RequestParameters _parameters;
+        protected readonly Uri _serviceUri;
+        protected readonly IOAuthHttpAdapter _httpAdapter;
 
         public AuthorizationCodeFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters)
-            : base(serviceUri, clientCredentials, parameters)
+            : this(serviceUri, clientCredentials, parameters, new OAuthHttpAdapter())
         {
+
+        }
+
+        public AuthorizationCodeFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters, IOAuthHttpAdapter httpAdapter)
+        {
+            _serviceUri = serviceUri;
+            _clientCredentials = clientCredentials;
+            _parameters = parameters;
+            _httpAdapter = httpAdapter;
             _state = Guid.NewGuid().ToString("N");
         }
 
@@ -30,12 +43,11 @@ namespace TokenClient.Protocols.OAuth2
 
         public UriAndMethod GetAuthorizationUriAndMethod()
         {
-            NameValueCollection parameters = GetAuthorizationRequestParameters();
+            Dictionary<string, string> parameters = GetAuthorizationRequestParameters();
 
-            var urlBuilder = new UriBuilder(AuthorizationEndpoint);
-            urlBuilder.Query = CreateQueryStringFromParameters(parameters);
-
-            return new UriAndMethod(urlBuilder.Uri, AuthorizationRequestMethod);
+            var urlParts = new UrlParts(AuthorizationEndpoint, parameters);
+            
+            return new UriAndMethod(urlParts.BuildUri(), AuthorizationRequestMethod);
         }
 
         protected virtual Uri AuthorizationEndpoint
@@ -43,9 +55,9 @@ namespace TokenClient.Protocols.OAuth2
             get { return new Uri(_serviceUri, "authorize"); }
         }
 
-        protected virtual NameValueCollection GetAuthorizationRequestParameters()
+        protected virtual Dictionary<string,string> GetAuthorizationRequestParameters()
         {
-            var parameters = new NameValueCollection(5);
+            var parameters = new Dictionary<string, string>(5);
             parameters.Add("response_type", "code");
             parameters.Add("client_id", _clientCredentials.ClientId);
             parameters.Add("redirect_uri", _parameters.RedirectUri.ToString());
@@ -62,12 +74,12 @@ namespace TokenClient.Protocols.OAuth2
 
         public void SetAccessCodeRepsonse(Uri resultUrl)
         {
-            NameValueCollection parameters = HttpUtility.ParseQueryString(resultUrl.Query);
+            var urlParts = new UrlParts(resultUrl);
 
-            string state = GetStateValueFromParameters(parameters);
+            string state = GetStateValueFromParameters(urlParts.QueryParameters);
             VerifyStateParameter(state);
 
-            string code = GetAuthorizationCodeFromParameters(parameters);
+            string code = GetAuthorizationCodeFromParameters(urlParts.QueryParameters);
 
             if (string.IsNullOrEmpty(code))
             {
@@ -77,12 +89,12 @@ namespace TokenClient.Protocols.OAuth2
             _accessCode = code;
         }
 
-        protected virtual string GetAuthorizationCodeFromParameters(NameValueCollection parameters)
+        protected virtual string GetAuthorizationCodeFromParameters(Dictionary<string,string> parameters)
         {
             return parameters["code"];
         }
 
-        protected virtual string GetStateValueFromParameters(NameValueCollection parameters)
+        protected virtual string GetStateValueFromParameters(Dictionary<string, string> parameters)
         {
             return parameters["state"];
         }
@@ -98,13 +110,8 @@ namespace TokenClient.Protocols.OAuth2
         public SecurityToken GetAccessToken()
         {
             Dictionary<string, string> parameters = CreateAccessTokenRequestParameters();
-            HttpContent content = new FormUrlEncodedContent(parameters);
-            
-            HttpResponseMessage response = HttpClient.PostAsync(TokenRequestEndpoint, content).Result;
-
-            ThrowIfErrorResponse(response);
-
-            AccessTokenResponse oauthResponse = ParseAccessTokenResponse(response);
+            ProtocolRequest oauthRequest = CreateProtocolRequest(parameters);
+            ProtocolResponse oauthResponse = _httpAdapter.SendRequest(oauthRequest);
             SecurityToken token = CreateSecurityToken(oauthResponse);
 
             return token;
@@ -126,6 +133,27 @@ namespace TokenClient.Protocols.OAuth2
         protected virtual Uri TokenRequestEndpoint
         {
             get { return new Uri(_serviceUri, "token"); }
+        }
+
+        protected virtual SecurityToken CreateSecurityToken(ProtocolResponse oauthResponse)
+        {
+            string tokenType = oauthResponse.BodyParameters["token_type"];
+            string accessTokenString = oauthResponse.BodyParameters["access_token"];
+
+            var token = new JwtSecurityToken(accessTokenString);
+            return token;
+        }
+
+        protected virtual ProtocolRequest CreateProtocolRequest(Dictionary<string, string> parameters)
+        {
+            var oauthRequest = new ProtocolRequest()
+            {
+                BodyParameters = parameters,
+                Method = HttpMethod.Post,
+                Url = new UrlParts(TokenRequestEndpoint)
+            };
+
+            return oauthRequest;
         }
     }
 }

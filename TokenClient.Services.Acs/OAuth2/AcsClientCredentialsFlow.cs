@@ -16,6 +16,12 @@ namespace TokenClient.Services.Acs.OAuth2
 
         }
 
+        public AcsClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters, IOAuthHttpAdapter httpAdapter)
+            : base(serviceUri, credentials, parameters, httpAdapter)
+        {
+
+        }
+
         protected override Uri TokenEndpoint
         {
             get { return new Uri(_serviceUri, AcsConstants.OAuthUrlPath); }

@@ -51,14 +51,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessTokenErrorResponse.cs" />
-    <Compile Include="AccessTokenResponse.cs" />
     <Compile Include="AuthorizationCodeFlowBase.cs" />
     <Compile Include="ClientCredentials.cs" />
     <Compile Include="ClientCredentialsFlowBase.cs" />
-    <Compile Include="OAuth2Flow.cs" />
+    <Compile Include="OAuthHttpAdapter.cs" />
+    <Compile Include="IOAuthHttpAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocolRequest.cs" />
+    <Compile Include="ProtocolResponse.cs" />
     <Compile Include="RequestParameters.cs" />
     <Compile Include="UriAndMethod.cs" />
+    <Compile Include="UrlParts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

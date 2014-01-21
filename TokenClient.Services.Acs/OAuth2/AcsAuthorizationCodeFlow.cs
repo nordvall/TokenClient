@@ -16,14 +16,20 @@ namespace TokenClient.Services.Acs.OAuth2
 
         }
 
+        public AcsAuthorizationCodeFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters, IOAuthHttpAdapter httpAdapter)
+            : base(serviceUri, credentials, parameters, httpAdapter)
+        {
+
+        }
+
         protected override Uri TokenRequestEndpoint
         {
             get { return new Uri(_serviceUri, AcsConstants.OAuthUrlPath); }
         }
 
-        protected override NameValueCollection GetAuthorizationRequestParameters()
+        protected override Dictionary<string, string> GetAuthorizationRequestParameters()
         {
-            NameValueCollection parameters = base.GetAuthorizationRequestParameters();
+            Dictionary<string, string> parameters = base.GetAuthorizationRequestParameters();
             parameters.Remove("scope");
             parameters.Add("resource", _parameters.Resource);
 

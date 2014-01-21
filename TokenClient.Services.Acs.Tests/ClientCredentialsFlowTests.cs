@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -34,48 +35,59 @@ namespace TokenClient.Services.Acs.Tests
         [Test]
         public void RequestAccessToken_RequestUrlIsCorrect()
         {
-            var flow = new TestableAcsClientCredentialsFlow(_serviceUri, _credentials, _requestParameters);
-
             JwtSecurityToken token = CreateJwtToken();
-            HttpResponseMessage response = CreateJwtTokenResponse(token);
-            flow.HttpHandler = new FakeHttpHandler(response);
-            
+            ProtocolResponse oauthResponse = CreateJwtTokenResponse(token);
+            IOAuthHttpAdapter httpAdapter = Substitute.For<IOAuthHttpAdapter>();
+
+            ProtocolRequest receivedRequest = null;
+            httpAdapter.SendRequest(Arg.Do<ProtocolRequest>(request => receivedRequest = request))
+                .Returns(oauthResponse);
+
+            var flow = new AcsClientCredentialsFlow(_serviceUri, _credentials, _requestParameters, httpAdapter);
+
+            // Act
             flow.RequestAccessToken();
 
-            HttpRequestMessage request = flow.HttpHandler.ReceivedRequests.Single();
+            // Assert
+            httpAdapter.Received(1).SendRequest(Arg.Any<ProtocolRequest>());
 
-            Assert.AreEqual(new Uri(_serviceUri, "/v2/oauth2-13/"), request.RequestUri);
+            Uri expectedUri = new Uri(_serviceUri, "/v2/oauth2-13/");
+
+            Assert.AreEqual(expectedUri, receivedRequest.Url.BuildUri());
         }
 
         [Test]
         public void RequestAccessToken_RequestContentIsCorrect()
         {
-            var flow = new TestableAcsClientCredentialsFlow(_serviceUri, _credentials, _requestParameters);
-
             JwtSecurityToken token = CreateJwtToken();
-            HttpResponseMessage response = CreateJwtTokenResponse(token);
-            flow.HttpHandler = new FakeHttpHandler(response);
+            ProtocolResponse oauthResponse = CreateJwtTokenResponse(token);
+            IOAuthHttpAdapter httpAdapter = Substitute.For<IOAuthHttpAdapter>();
+            
+            ProtocolRequest receivedRequest = null;
+            httpAdapter.SendRequest(Arg.Do<ProtocolRequest>(request => receivedRequest = request))
+                .Returns(oauthResponse);
+
+            var flow = new AcsClientCredentialsFlow(_serviceUri, _credentials, _requestParameters, httpAdapter);
 
             flow.RequestAccessToken();
 
-            HttpRequestMessage request = flow.HttpHandler.ReceivedRequests.Single();
-            string requestBody = request.Content.ReadAsStringAsync().Result;
-            NameValueCollection requestValues = HttpUtility.ParseQueryString(requestBody);
+            httpAdapter.Received(1).SendRequest(Arg.Any<ProtocolRequest>());
 
-            Assert.AreEqual(requestValues["grant_type"], "client_credentials");
-            Assert.AreEqual(requestValues["client_id"], _credentials.ClientId);
-            Assert.AreEqual(requestValues["client_secret"], _credentials.ClientSecret);
-            Assert.AreEqual(requestValues["scope"], _requestParameters.Resource);
+            Assert.AreEqual(receivedRequest.BodyParameters["grant_type"], "client_credentials");
+            Assert.AreEqual(receivedRequest.BodyParameters["client_id"], _credentials.ClientId);
+            Assert.AreEqual(receivedRequest.BodyParameters["client_secret"], _credentials.ClientSecret);
+            Assert.AreEqual(receivedRequest.BodyParameters["scope"], _requestParameters.Resource);
         }
 
         [Test]
         public void RequestAccessToken_ReceivedTokenIsCorrect()
         {
-            var flow = new TestableAcsClientCredentialsFlow(_serviceUri, _credentials, _requestParameters);
-
             JwtSecurityToken preparedToken = CreateJwtToken();
-            HttpResponseMessage response = CreateJwtTokenResponse(preparedToken);
-            flow.HttpHandler = new FakeHttpHandler(response);
+            ProtocolResponse oauthResponse = CreateJwtTokenResponse(preparedToken);
+            IOAuthHttpAdapter httpAdapter = Substitute.For<IOAuthHttpAdapter>();
+            httpAdapter.SendRequest(Arg.Any<ProtocolRequest>()).Returns(oauthResponse);
+
+            var flow = new AcsClientCredentialsFlow(_serviceUri, _credentials, _requestParameters, httpAdapter);
 
             JwtSecurityToken receivedToken = flow.RequestAccessToken() as JwtSecurityToken;
 
@@ -85,41 +97,21 @@ namespace TokenClient.Services.Acs.Tests
             Assert.AreEqual(preparedToken.Expiration, receivedToken.Expiration);
         }
 
-        [Test]
-        public void RequestAccessToken_WhenServerReturnsBadRequest_ExceptionIsThrown()
-        {
-            string errorDescription = "The request is invalid.";
-
-            var flow = new TestableAcsClientCredentialsFlow(_serviceUri, _credentials, _requestParameters);
-
-            HttpResponseMessage response = CreateErrorResponse(HttpStatusCode.BadRequest, "invalid_request", errorDescription);
-            flow.HttpHandler = new FakeHttpHandler(response);
-
-            Exception ex = Assert.Throws<Exception>(() => flow.RequestAccessToken());
-
-            Assert.AreEqual(errorDescription, ex.Message);
-        }
-
-        private HttpResponseMessage CreateJwtTokenResponse(JwtSecurityToken token)
+        private ProtocolResponse CreateJwtTokenResponse(JwtSecurityToken token)
         {
             var handler = new JwtSecurityTokenHandler();
             string tokenString = handler.WriteToken(token);
 
-            dynamic response = new
+            var bodyParameters = new Dictionary<string,string>
             {
-                access_token = tokenString,
-                token_type = "urn:ietf:params:oauth:token-type:jwt",
-                expires_in = "900",
+                {"access_token", tokenString},
+                {"token_type", "urn:ietf:params:oauth:token-type:jwt"},
+                {"expires_in", "900"}
             };
 
-            string serializedResponse = JsonConvert.SerializeObject(response);
+            var oauthResponse = new ProtocolResponse(bodyParameters);
 
-            var httpResponse = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(serializedResponse)
-            };
-
-            return httpResponse;
+            return oauthResponse;
         }
 
         private HttpResponseMessage CreateErrorResponse(HttpStatusCode httpCode, string errorCode, string errorMessage)

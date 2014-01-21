@@ -61,7 +61,6 @@
     <Compile Include="ClientCredentialsFlowTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FakeHttpHandler.cs" />
-    <Compile Include="TestableAcsClientCredentialsFlow.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TokenClient.Common\TokenClient.Common.csproj">

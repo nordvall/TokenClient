@@ -26,9 +26,9 @@ namespace TokenClient.Services.AzureAd.OAuth2
             get { return new Uri(_serviceUri, AzureAdConstants.OAuthUrlPath); }
         }
 
-        protected override NameValueCollection GetAuthorizationRequestParameters()
+        protected override Dictionary<string, string> GetAuthorizationRequestParameters()
         {
-            NameValueCollection parameters = base.GetAuthorizationRequestParameters();
+            Dictionary<string, string> parameters = base.GetAuthorizationRequestParameters();
             parameters.Remove("scope");
             parameters.Add("resource", _parameters.Resource);
 
