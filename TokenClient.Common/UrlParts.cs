@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace TokenClient.Protocols.OAuth2
+namespace TokenClient.Common
 {
     public class UrlParts
     {

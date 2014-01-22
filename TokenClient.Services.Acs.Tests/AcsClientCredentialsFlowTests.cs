@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using TokenClient.Common;
 using TokenClient.Protocols.OAuth2;
 using TokenClient.Services.Acs.OAuth2;
 
@@ -37,7 +38,7 @@ namespace TokenClient.Services.Acs.Tests
         {
             JwtSecurityToken token = CreateJwtToken();
             ProtocolResponse oauthResponse = CreateJwtTokenResponse(token);
-            IOAuthHttpAdapter httpAdapter = Substitute.For<IOAuthHttpAdapter>();
+            IHttpClient httpAdapter = Substitute.For<IHttpClient>();
 
             ProtocolRequest receivedRequest = null;
             httpAdapter.SendRequest(Arg.Do<ProtocolRequest>(request => receivedRequest = request))
@@ -61,7 +62,7 @@ namespace TokenClient.Services.Acs.Tests
         {
             JwtSecurityToken token = CreateJwtToken();
             ProtocolResponse oauthResponse = CreateJwtTokenResponse(token);
-            IOAuthHttpAdapter httpAdapter = Substitute.For<IOAuthHttpAdapter>();
+            IHttpClient httpAdapter = Substitute.For<IHttpClient>();
             
             ProtocolRequest receivedRequest = null;
             httpAdapter.SendRequest(Arg.Do<ProtocolRequest>(request => receivedRequest = request))
@@ -84,7 +85,7 @@ namespace TokenClient.Services.Acs.Tests
         {
             JwtSecurityToken preparedToken = CreateJwtToken();
             ProtocolResponse oauthResponse = CreateJwtTokenResponse(preparedToken);
-            IOAuthHttpAdapter httpAdapter = Substitute.For<IOAuthHttpAdapter>();
+            IHttpClient httpAdapter = Substitute.For<IHttpClient>();
             httpAdapter.SendRequest(Arg.Any<ProtocolRequest>()).Returns(oauthResponse);
 
             var flow = new AcsClientCredentialsFlow(_serviceUri, _credentials, _requestParameters, httpAdapter);

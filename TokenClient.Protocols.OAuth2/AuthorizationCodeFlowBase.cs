@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using TokenClient.Common;
 
 namespace TokenClient.Protocols.OAuth2
 {
@@ -19,15 +20,15 @@ namespace TokenClient.Protocols.OAuth2
         protected readonly ClientCredentials _clientCredentials;
         protected readonly RequestParameters _parameters;
         protected readonly Uri _serviceUri;
-        protected readonly IOAuthHttpAdapter _httpAdapter;
+        protected readonly IHttpClient _httpAdapter;
 
         public AuthorizationCodeFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters)
-            : this(serviceUri, clientCredentials, parameters, new OAuthHttpAdapter())
+            : this(serviceUri, clientCredentials, parameters, new OAuthHttpClient())
         {
 
         }
 
-        public AuthorizationCodeFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters, IOAuthHttpAdapter httpAdapter)
+        public AuthorizationCodeFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters, IHttpClient httpAdapter)
         {
             _serviceUri = serviceUri;
             _clientCredentials = clientCredentials;

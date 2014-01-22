@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TokenClient.Protocols.OAuth2
+namespace TokenClient.Common
 {
     public static class DictionaryExtensions
     {

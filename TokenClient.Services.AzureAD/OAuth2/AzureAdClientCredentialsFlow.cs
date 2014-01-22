@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TokenClient.Common;
 using TokenClient.Protocols.OAuth2;
 
 namespace TokenClient.Services.AzureAd.OAuth2
@@ -16,7 +17,7 @@ namespace TokenClient.Services.AzureAd.OAuth2
             ValidateUri(serviceUri);
         }
 
-        public AzureAdClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters, IOAuthHttpAdapter httpAdapter)
+        public AzureAdClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters, IHttpClient httpAdapter)
             : base(serviceUri, credentials, parameters, httpAdapter)
         {
             ValidateUri(serviceUri);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TokenClient.Common;
 using TokenClient.Protocols.OAuth2;
 
 namespace TokenClient.Services.Acs.OAuth2
@@ -16,7 +17,7 @@ namespace TokenClient.Services.Acs.OAuth2
 
         }
 
-        public AcsClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters, IOAuthHttpAdapter httpAdapter)
+        public AcsClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters, IHttpClient httpAdapter)
             : base(serviceUri, credentials, parameters, httpAdapter)
         {
 

@@ -6,8 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using TokenClient.Common;
 
-namespace TokenClient.Protocols.OAuth2.Tests
+namespace TokenClient.Common.Tests
 {
     [TestFixture]
     public class UrlPartsTests

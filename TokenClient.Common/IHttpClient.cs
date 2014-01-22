@@ -1,7 +1,8 @@
 ﻿using System;
-namespace TokenClient.Protocols.OAuth2
+using TokenClient.Common;
+namespace TokenClient.Common
 {
-    public interface IOAuthHttpAdapter
+    public interface IHttpClient
     {
         ProtocolResponse SendRequest(ProtocolRequest oauthRequest);
     }
