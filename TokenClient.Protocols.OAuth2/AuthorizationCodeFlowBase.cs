@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using TokenClient.Common;
+using TokenClient.Protocols.OAuth2.Http;
 
 namespace TokenClient.Protocols.OAuth2
 {

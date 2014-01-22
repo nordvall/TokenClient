@@ -54,7 +54,8 @@
     <Compile Include="AuthorizationCodeFlowBase.cs" />
     <Compile Include="ClientCredentials.cs" />
     <Compile Include="ClientCredentialsFlowBase.cs" />
-    <Compile Include="OAuthHttpClient.cs" />
+    <Compile Include="Http\OAuthHttpClient.cs" />
+    <Compile Include="Http\OAuthJsonHttpResponseAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestParameters.cs" />
   </ItemGroup>
