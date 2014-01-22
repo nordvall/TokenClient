@@ -21,7 +21,7 @@ namespace TokenClient.Protocols.OAuth2
         protected readonly ClientCredentials _clientCredentials;
         protected readonly RequestParameters _parameters;
         protected readonly Uri _serviceUri;
-        protected readonly IHttpClient _httpAdapter;
+        protected readonly IHttpClient _httpClient;
 
         public AuthorizationCodeFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters)
             : this(serviceUri, clientCredentials, parameters, new OAuthHttpClient())
@@ -29,12 +29,12 @@ namespace TokenClient.Protocols.OAuth2
 
         }
 
-        public AuthorizationCodeFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters, IHttpClient httpAdapter)
+        public AuthorizationCodeFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters, IHttpClient httpClient)
         {
             _serviceUri = serviceUri;
             _clientCredentials = clientCredentials;
             _parameters = parameters;
-            _httpAdapter = httpAdapter;
+            _httpClient = httpClient;
             _state = Guid.NewGuid().ToString("N");
         }
 
@@ -109,7 +109,7 @@ namespace TokenClient.Protocols.OAuth2
         {
             Dictionary<string, string> parameters = CreateAccessTokenRequestParameters();
             ProtocolRequest oauthRequest = CreateProtocolRequest(parameters);
-            ProtocolResponse oauthResponse = _httpAdapter.SendRequest(oauthRequest);
+            ProtocolResponse oauthResponse = _httpClient.SendRequest(oauthRequest);
             SecurityToken token = CreateSecurityToken(oauthResponse);
 
             return token;

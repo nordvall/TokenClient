@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using TokenClient.Common;
+using TokenClient.Protocols.OAuth2.Http;
 
 namespace TokenClient.Protocols.OAuth2
 {
@@ -15,7 +16,7 @@ namespace TokenClient.Protocols.OAuth2
         protected readonly ClientCredentials _clientCredentials;
         protected readonly RequestParameters _parameters;
         protected readonly Uri _serviceUri;
-        protected readonly IHttpClient _httpAdapter;
+        protected readonly IHttpClient _httpClient;
 
         public ClientCredentialsFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters)
             : this(serviceUri, clientCredentials, parameters, new OAuthHttpClient())
@@ -23,12 +24,12 @@ namespace TokenClient.Protocols.OAuth2
 
         }
 
-        public ClientCredentialsFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters, IHttpClient httpAdapter)
+        public ClientCredentialsFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters, IHttpClient httpClient)
         {
             _serviceUri = serviceUri;
             _clientCredentials = clientCredentials;
             _parameters = parameters;
-            _httpAdapter = httpAdapter;
+            _httpClient = httpClient;
         }
 
         protected virtual HttpMethod AccessTokenRequestMethod
@@ -47,7 +48,7 @@ namespace TokenClient.Protocols.OAuth2
 
             ProtocolRequest oauthRequest = CreateProtocolRequest(url, AccessTokenRequestMethod, bodyParameters);
 
-            ProtocolResponse oauthResponse = _httpAdapter.SendRequest(oauthRequest);
+            ProtocolResponse oauthResponse = _httpClient.SendRequest(oauthRequest);
 
             SecurityToken token = CreateSecurityToken(oauthResponse);
 

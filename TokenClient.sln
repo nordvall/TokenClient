@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
+# Visual Studio Express 2013 for Windows Desktop
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Protocols.OAuth2", "TokenClient.Protocols.OAuth2\TokenClient.Protocols.OAuth2.csproj", "{7DB1ACE4-D525-4411-A7EB-B25325DCE9BB}"
@@ -29,6 +29,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Services.AzureAd.Tests", "TokenClient.Services.AzureAd.Tests\TokenClient.Services.AzureAd.Tests.csproj", "{25CC06AF-2926-4CD1-A304-9214616F1353}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Common.Tests", "TokenClient.Common.Tests\TokenClient.Common.Tests.csproj", "{2270EEF9-0E2C-4B88-8575-A2263997DB0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenClient.Protocols.OAuthWrap", "TokenClient.Protocols.OAuthWrap\TokenClient.Protocols.OAuthWrap.csproj", "{7FE8782C-1BC6-495A-B276-785BA79E5444}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,6 +78,10 @@ Global
 		{2270EEF9-0E2C-4B88-8575-A2263997DB0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2270EEF9-0E2C-4B88-8575-A2263997DB0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2270EEF9-0E2C-4B88-8575-A2263997DB0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FE8782C-1BC6-495A-B276-785BA79E5444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FE8782C-1BC6-495A-B276-785BA79E5444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FE8782C-1BC6-495A-B276-785BA79E5444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FE8782C-1BC6-495A-B276-785BA79E5444}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

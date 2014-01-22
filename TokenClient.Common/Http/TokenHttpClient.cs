@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using TokenClient.Common;
 using TokenClient.Common.Http;
 
-namespace TokenClient.Protocols.OAuth2
+namespace TokenClient.Common.Http
 {
     public class TokenHttpClient : IHttpClient
     {
