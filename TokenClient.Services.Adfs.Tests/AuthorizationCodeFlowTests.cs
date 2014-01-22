@@ -30,14 +30,14 @@ namespace TokenClient.Services.Adfs.Tests
         {
             var flow = new AdfsAuthorizationCodeFlow(_serviceUri, _credentials, _requestParameters);
 
-            UriAndMethod uri = flow.GetAuthorizationUriAndMethod();
+            Uri uri = flow.GetAuthorizationUri();
 
-            Assert.AreEqual(_serviceUri.Scheme, uri.Uri.Scheme, "Url scheme is incorrect");
-            Assert.AreEqual(_serviceUri.Host, uri.Uri.Host, "Host name is incorrect");
-            Assert.AreEqual(_serviceUri.Port, uri.Uri.Port, "Port is incorrect");
-            Assert.AreEqual("/adfs/oauth2/authorize", uri.Uri.AbsolutePath, "Url path is incorrect");
+            Assert.AreEqual(_serviceUri.Scheme, uri.Scheme, "Url scheme is incorrect");
+            Assert.AreEqual(_serviceUri.Host, uri.Host, "Host name is incorrect");
+            Assert.AreEqual(_serviceUri.Port, uri.Port, "Port is incorrect");
+            Assert.AreEqual("/adfs/oauth2/authorize", uri.AbsolutePath, "Url path is incorrect");
 
-            NameValueCollection queryParameters = HttpUtility.ParseQueryString(uri.Uri.Query);
+            NameValueCollection queryParameters = HttpUtility.ParseQueryString(uri.Query);
 
             Assert.AreEqual(_requestParameters.RedirectUri, new Uri(queryParameters["redirect_uri"]), "Redirect uri is incorrect");
             Assert.AreEqual("code", queryParameters["response_type"], "Response type is incorrect");

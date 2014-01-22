@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using TokenClient.Protocols.OAuth2;
@@ -22,6 +23,11 @@ namespace TokenClient.Services.Acs.OAuth2
 
         }
 
+        protected override Uri AuthorizationEndpoint
+        {
+            get { return new Uri(_serviceUri, AcsConstants.OAuthUrlPath); }
+        }
+
         protected override Uri TokenRequestEndpoint
         {
             get { return new Uri(_serviceUri, AcsConstants.OAuthUrlPath); }
@@ -29,11 +35,7 @@ namespace TokenClient.Services.Acs.OAuth2
 
         protected override Dictionary<string, string> GetAuthorizationRequestParameters()
         {
-            Dictionary<string, string> parameters = base.GetAuthorizationRequestParameters();
-            parameters.Remove("scope");
-            parameters.Add("resource", _parameters.Resource);
-
-            return parameters;
+            throw new NotSupportedException("ACS needs delegations to be pre-created by the management API");
         }
 
         protected override Dictionary<string, string> CreateAccessTokenRequestParameters()

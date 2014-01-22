@@ -41,13 +41,14 @@ namespace TokenClient.Protocols.OAuth2
             get { return _state; } 
         }
 
-        public UriAndMethod GetAuthorizationUriAndMethod()
+        public Uri GetAuthorizationUri()
         {
             Dictionary<string, string> parameters = GetAuthorizationRequestParameters();
 
             var urlParts = new UrlParts(AuthorizationEndpoint, parameters);
+            Uri uri = urlParts.BuildUri();
             
-            return new UriAndMethod(urlParts.BuildUri(), AuthorizationRequestMethod);
+            return uri;
         }
 
         protected virtual Uri AuthorizationEndpoint
@@ -65,11 +66,6 @@ namespace TokenClient.Protocols.OAuth2
             parameters.Add("scope", _parameters.Scope);
 
             return parameters;
-        }
-
-        protected virtual HttpMethod AuthorizationRequestMethod
-        {
-            get { return HttpMethod.Get; }
         }
 
         public void SetAccessCodeRepsonse(Uri resultUrl)
