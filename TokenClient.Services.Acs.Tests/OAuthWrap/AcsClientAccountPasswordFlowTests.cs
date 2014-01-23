@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using TokenClient.Common;
+using TokenClient.Common.Tokens;
 using TokenClient.Protocols.OAuthWrap;
 using TokenClient.Services.Acs.OAuthWrap;
 
@@ -44,7 +45,7 @@ namespace TokenClient.Services.Acs.Tests
             var flow = new AcsClientAccountPasswordFlow(_serviceUri, _tokenRequest, httpAdapter);
 
             // Act
-            flow.RequestAccessToken();
+            flow.GetAccessToken();
 
             // Assert
             httpAdapter.Received(1).SendRequest(Arg.Any<ProtocolRequest>());
@@ -66,7 +67,7 @@ namespace TokenClient.Services.Acs.Tests
 
             var flow = new AcsClientAccountPasswordFlow(_serviceUri, _tokenRequest, httpAdapter);
 
-            flow.RequestAccessToken();
+            flow.GetAccessToken();
 
             httpAdapter.Received(1).SendRequest(Arg.Any<ProtocolRequest>());
 
@@ -84,7 +85,7 @@ namespace TokenClient.Services.Acs.Tests
 
             var flow = new AcsClientAccountPasswordFlow(_serviceUri, _tokenRequest, httpAdapter);
 
-            SwtSecurityToken receivedToken = flow.RequestAccessToken() as SwtSecurityToken;
+            SwtSecurityToken receivedToken = flow.GetAccessToken() as SwtSecurityToken;
 
             Assert.AreEqual("myScope", receivedToken.Audience);
             Assert.AreEqual("http://mysts", receivedToken.Issuer);

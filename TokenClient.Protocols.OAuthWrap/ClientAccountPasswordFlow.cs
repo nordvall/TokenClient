@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using TokenClient.Common;
+using TokenClient.Common.Tokens;
 using TokenClient.Protocols.OAuthWrap.Http;
 
 namespace TokenClient.Protocols.OAuthWrap
@@ -30,7 +31,22 @@ namespace TokenClient.Protocols.OAuthWrap
             _httpClient = httpClient;
         }
 
-        public SecurityToken RequestAccessToken()
+        public string GetAccessTokenAsString()
+        {
+            string tokenString = RequestAccessToken();
+            return tokenString;
+        }
+        
+        public SwtSecurityToken GetAccessToken()
+        {
+            string tokenString = RequestAccessToken();
+            NameValueCollection tokenParts = HttpUtility.ParseQueryString(tokenString);
+            var token = new SwtSecurityToken(tokenParts);
+
+            return token;
+        }
+
+        protected string RequestAccessToken()
         {
             Dictionary<string, string> bodyParameters = CreateAccessTokenRequestParameters();
 
@@ -43,20 +59,16 @@ namespace TokenClient.Protocols.OAuthWrap
 
             ProtocolResponse oauthResponse = _httpClient.SendRequest(oauthRequest);
 
-            SecurityToken token = CreateSecurityToken(oauthResponse);
+            string tokenString = ExtractSecurityTokenFromResponse(oauthResponse);
 
-            return token;
+            return tokenString;
         }
 
-        protected virtual SecurityToken CreateSecurityToken(ProtocolResponse oauthResponse)
+        protected virtual string ExtractSecurityTokenFromResponse(ProtocolResponse oauthResponse)
         {
             string tokenType = oauthResponse.BodyParameters["wrap_access_token_expires_in"];
             string accessTokenString = oauthResponse.BodyParameters["wrap_access_token"];
-
-            NameValueCollection tokenParts = HttpUtility.ParseQueryString(accessTokenString);
-
-            var token = new SwtSecurityToken(tokenParts);
-            return token;
+            return accessTokenString;
         }
 
         protected virtual ProtocolRequest CreateProtocolRequest(UrlParts requestUrl, Dictionary<string, string> parameters)
