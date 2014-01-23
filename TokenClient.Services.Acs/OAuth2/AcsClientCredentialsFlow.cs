@@ -11,27 +11,27 @@ namespace TokenClient.Services.Acs.OAuth2
 {
     public class AcsClientCredentialsFlow : ClientCredentialsFlowBase
     {
-        public AcsClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters)
-            : base(serviceUri, credentials, parameters)
+        public AcsClientCredentialsFlow(Uri serviceUri, ClientCredentialsTokenRequest tokenRequest)
+            : base(serviceUri, tokenRequest)
         {
 
         }
 
-        public AcsClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters, IHttpClient httpAdapter)
-            : base(serviceUri, credentials, parameters, httpAdapter)
+        public AcsClientCredentialsFlow(Uri serviceUri, ClientCredentialsTokenRequest tokenRequest, IHttpClient httpAdapter)
+            : base(serviceUri, tokenRequest, httpAdapter)
         {
 
         }
 
         protected override Uri TokenEndpoint
         {
-            get { return new Uri(_serviceUri, AcsConstants.OAuthUrlPath); }
+            get { return new Uri(_serviceUri, AcsConstants.OAuth2UrlPath); }
         }
 
         protected override Dictionary<string,string> CreateAccessTokenRequestParameters()
         {
             Dictionary<string,string> parameters = base.CreateAccessTokenRequestParameters();
-            parameters["scope"] = _parameters.Resource;
+            parameters["scope"] = _tokenRequest.Scope;
 
             return parameters;
         }

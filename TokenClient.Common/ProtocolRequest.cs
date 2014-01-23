@@ -15,7 +15,7 @@ namespace TokenClient.Common
         }
 
         public UrlParts Url { get; set; }
-        public HttpMethod Method { get; set; }
+
         public Dictionary<string,string> BodyParameters { get; set; }
     }
 }

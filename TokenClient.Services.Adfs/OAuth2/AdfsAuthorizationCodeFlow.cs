@@ -10,8 +10,8 @@ namespace TokenClient.Services.Adfs.OAuth2
 {
     public class AdfsAuthorizationCodeFlow : AuthorizationCodeFlowBase
     {
-        public AdfsAuthorizationCodeFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters)
-            : base(serviceUri, credentials, parameters)
+        public AdfsAuthorizationCodeFlow(Uri serviceUri, AuthorizationCodeTokenRequest tokenRequest)
+            : base(serviceUri, tokenRequest)
         {
 
         }
@@ -30,7 +30,7 @@ namespace TokenClient.Services.Adfs.OAuth2
         {
             Dictionary<string, string> parameters = base.GetAuthorizationRequestParameters();
             parameters.Remove("scope");
-            parameters.Add("resource", _parameters.Resource);
+            parameters.Add("resource", _tokenRequest.Scope);
 
             return parameters;
         }

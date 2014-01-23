@@ -54,6 +54,7 @@
     <Compile Include="AcsConstants.cs" />
     <Compile Include="OAuth2\AcsAuthorizationCodeFlow.cs" />
     <Compile Include="OAuth2\AcsClientCredentialsFlow.cs" />
+    <Compile Include="OAuthWrap\AcsClientAccountPasswordFlow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +65,10 @@
     <ProjectReference Include="..\TokenClient.Protocols.OAuth2\TokenClient.Protocols.OAuth2.csproj">
       <Project>{7db1ace4-d525-4411-a7eb-b25325dce9bb}</Project>
       <Name>TokenClient.Protocols.OAuth2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TokenClient.Protocols.OAuthWrap\TokenClient.Protocols.OAuthWrap.csproj">
+      <Project>{7fe8782c-1bc6-495a-b276-785ba79e5444}</Project>
+      <Name>TokenClient.Protocols.OAuthWrap</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

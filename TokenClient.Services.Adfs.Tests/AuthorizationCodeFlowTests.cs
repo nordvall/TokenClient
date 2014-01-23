@@ -14,37 +14,35 @@ namespace TokenClient.Services.Adfs.Tests
     [TestFixture]
     public class AuthorizationCodeFlowTests
     {
-        private readonly ClientCredentials _credentials;
-        private readonly RequestParameters _requestParameters;
+        private readonly AuthorizationCodeTokenRequest _tokenRequest;
         private readonly Uri _serviceUri;
 
         public AuthorizationCodeFlowTests()
         {
-            _requestParameters = new RequestParameters(new Uri("https://www.myapplication.net"), "myResource", "myScope");
-            _credentials = new ClientCredentials("myClient", "mySecret");
+            _tokenRequest = new AuthorizationCodeTokenRequest("myClient", "mySecret", "myScope", new Uri("https://www.myapplication.net"));
             _serviceUri = new Uri("https://adfs.example.com");
         }
 
         [Test]
         public void GetAuthorizationUrl_UrlIsCorrect()
         {
-            var flow = new AdfsAuthorizationCodeFlow(_serviceUri, _credentials, _requestParameters);
+            var flow = new AdfsAuthorizationCodeFlow(_serviceUri, _tokenRequest);
 
             Uri uri = flow.GetAuthorizationUri();
 
             Assert.AreEqual(_serviceUri.Scheme, uri.Scheme, "Url scheme is incorrect");
             Assert.AreEqual(_serviceUri.Host, uri.Host, "Host name is incorrect");
             Assert.AreEqual(_serviceUri.Port, uri.Port, "Port is incorrect");
-            Assert.AreEqual("/adfs/oauth2/authorize", uri.AbsolutePath, "Url path is incorrect");
+            Assert.AreEqual("/adfs/oauth2", uri.AbsolutePath, "Url path is incorrect");
 
             NameValueCollection queryParameters = HttpUtility.ParseQueryString(uri.Query);
 
-            Assert.AreEqual(_requestParameters.RedirectUri, new Uri(queryParameters["redirect_uri"]), "Redirect uri is incorrect");
+            Assert.AreEqual(_tokenRequest.RedirectUri, new Uri(queryParameters["redirect_uri"]), "Redirect uri is incorrect");
             Assert.AreEqual("code", queryParameters["response_type"], "Response type is incorrect");
-            Assert.AreEqual(_credentials.ClientId, queryParameters["client_id"], "Client id is incorrect");
-            Assert.AreEqual(_requestParameters.RedirectUri, queryParameters["redirect_uri"], "Redirect uri is incorrect");
+            Assert.AreEqual(_tokenRequest.ClientId, queryParameters["client_id"], "Client id is incorrect");
+            Assert.AreEqual(_tokenRequest.RedirectUri, queryParameters["redirect_uri"], "Redirect uri is incorrect");
             Assert.AreEqual(flow.FlowId, queryParameters["state"], "State is incorrect");
-            Assert.AreEqual(_requestParameters.Resource, queryParameters["resource"], "Resource is incorrect");
+            Assert.AreEqual(_tokenRequest.Scope, queryParameters["resource"], "Resource is incorrect");
             Assert.IsFalse(queryParameters.AllKeys.Contains("scope"), "Url should not include scope parameter (unsupported by ADFS).");
             
         }

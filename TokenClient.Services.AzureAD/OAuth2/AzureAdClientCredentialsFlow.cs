@@ -11,14 +11,14 @@ namespace TokenClient.Services.AzureAd.OAuth2
 {
     public class AzureAdClientCredentialsFlow : ClientCredentialsFlowBase
     {
-        public AzureAdClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters)
-            : base(serviceUri, credentials, parameters)
+        public AzureAdClientCredentialsFlow(Uri serviceUri, ClientCredentialsTokenRequest tokenRequest)
+            : base(serviceUri, tokenRequest)
         {
             ValidateUri(serviceUri);
         }
 
-        public AzureAdClientCredentialsFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters, IHttpClient httpAdapter)
-            : base(serviceUri, credentials, parameters, httpAdapter)
+        public AzureAdClientCredentialsFlow(Uri serviceUri, ClientCredentialsTokenRequest tokenRequest, IHttpClient httpAdapter)
+            : base(serviceUri, tokenRequest, httpAdapter)
         {
             ValidateUri(serviceUri);
         }
@@ -42,7 +42,7 @@ namespace TokenClient.Services.AzureAd.OAuth2
         {
             Dictionary<string,string> parameters = base.CreateAccessTokenRequestParameters();
             parameters.Remove("scope");
-            parameters["resource"] = _parameters.Resource;
+            parameters["resource"] = _tokenRequest.Scope;
 
             return parameters;
         }

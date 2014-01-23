@@ -13,28 +13,21 @@ namespace TokenClient.Protocols.OAuth2
 {
     public class ClientCredentialsFlowBase
     {
-        protected readonly ClientCredentials _clientCredentials;
-        protected readonly RequestParameters _parameters;
+        protected readonly ClientCredentialsTokenRequest _tokenRequest;
         protected readonly Uri _serviceUri;
         protected readonly IHttpClient _httpClient;
 
-        public ClientCredentialsFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters)
-            : this(serviceUri, clientCredentials, parameters, new OAuthHttpClient())
+        public ClientCredentialsFlowBase(Uri serviceUri, ClientCredentialsTokenRequest tokenRequest)
+            : this(serviceUri, tokenRequest, new OAuthHttpClient())
         {
 
         }
 
-        public ClientCredentialsFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters, IHttpClient httpClient)
+        public ClientCredentialsFlowBase(Uri serviceUri, ClientCredentialsTokenRequest tokenRequest, IHttpClient httpClient)
         {
             _serviceUri = serviceUri;
-            _clientCredentials = clientCredentials;
-            _parameters = parameters;
+            _tokenRequest = tokenRequest;
             _httpClient = httpClient;
-        }
-
-        protected virtual HttpMethod AccessTokenRequestMethod
-        {
-            get { return HttpMethod.Post; }
         }
 
         public SecurityToken RequestAccessToken()
@@ -46,7 +39,7 @@ namespace TokenClient.Protocols.OAuth2
                 Path = TokenEndpoint.AbsolutePath
             };
 
-            ProtocolRequest oauthRequest = CreateProtocolRequest(url, AccessTokenRequestMethod, bodyParameters);
+            ProtocolRequest oauthRequest = CreateProtocolRequest(url, bodyParameters);
 
             ProtocolResponse oauthResponse = _httpClient.SendRequest(oauthRequest);
 
@@ -64,12 +57,11 @@ namespace TokenClient.Protocols.OAuth2
             return token;
         }
 
-        protected virtual ProtocolRequest CreateProtocolRequest(UrlParts requestUrl, HttpMethod method, Dictionary<string,string> parameters)
+        protected virtual ProtocolRequest CreateProtocolRequest(UrlParts requestUrl, Dictionary<string,string> parameters)
         {
             var oauthRequest = new ProtocolRequest()
             {
                 Url = requestUrl,
-                Method = method,
                 BodyParameters = parameters
             };
 
@@ -81,9 +73,9 @@ namespace TokenClient.Protocols.OAuth2
             var formParameters = new Dictionary<string, string>()
             {
                 {"grant_type", "client_credentials"},
-                {"client_id", _clientCredentials.ClientId},
-                {"client_secret", _clientCredentials.ClientSecret},
-                {"scope", _parameters.Scope}
+                {"client_id", _tokenRequest.ClientId},
+                {"client_secret", _tokenRequest.ClientSecret},
+                {"scope", _tokenRequest.Scope}
             };
 
             return formParameters;

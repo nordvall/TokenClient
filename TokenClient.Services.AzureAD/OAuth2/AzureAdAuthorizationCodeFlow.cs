@@ -10,8 +10,8 @@ namespace TokenClient.Services.AzureAd.OAuth2
 {
     public class AzureAdAuthorizationCodeFlow : AuthorizationCodeFlowBase
     {
-        public AzureAdAuthorizationCodeFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters)
-            : base(serviceUri, credentials, parameters)
+        public AzureAdAuthorizationCodeFlow(Uri serviceUri, AuthorizationCodeTokenRequest tokenRequest)
+            : base(serviceUri, tokenRequest)
         {
             Guid validatedTenantId = Guid.Empty;
 
@@ -30,7 +30,7 @@ namespace TokenClient.Services.AzureAd.OAuth2
         {
             Dictionary<string, string> parameters = base.GetAuthorizationRequestParameters();
             parameters.Remove("scope");
-            parameters.Add("resource", _parameters.Resource);
+            parameters.Add("resource", _tokenRequest.Scope);
 
             return parameters;
         }

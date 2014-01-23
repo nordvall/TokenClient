@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace TokenClient.Services.Acs
 {
-    class AcsConstants
+    public class AcsConstants
     {
-        public const string OAuthUrlPath = "v2/oauth2-13/";
+        public const string OAuth2UrlPath = "v2/oauth2-13/";
+        public const string OAuthWrapUrlPath = "WRAPv0.9/";
     }
 }

@@ -8,6 +8,6 @@ namespace TokenClient.Services.Adfs
 {
     class AdfsConstants
     {
-        public const string OAuthUrlPath = "adfs/oauth2/authorize";
+        public const string OAuthUrlPath = "adfs/oauth2";
     }
 }

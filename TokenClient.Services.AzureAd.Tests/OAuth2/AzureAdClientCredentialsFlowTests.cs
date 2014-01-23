@@ -22,14 +22,12 @@ namespace TokenClient.Services.AzureAd.Tests
     [TestFixture]
     public class AzureAdClientCredentialsFlowTests
     {
-        private readonly ClientCredentials _credentials;
-        private readonly RequestParameters _requestParameters;
+        private readonly ClientCredentialsTokenRequest _tokenRequest;
         private readonly Uri _serviceUri;
 
         public AzureAdClientCredentialsFlowTests()
         {
-            _requestParameters = new RequestParameters(new Uri("https://www.myapplication.net"), "myResource", "myScope");
-            _credentials = new ClientCredentials("myClient", "mySecret");
+            _tokenRequest = new ClientCredentialsTokenRequest("myClient", "mySecret", "myScope");
             _serviceUri = new Uri("https://acs.example.com");
         }
 
@@ -45,7 +43,7 @@ namespace TokenClient.Services.AzureAd.Tests
             httpAdapter.SendRequest(Arg.Do<ProtocolRequest>(request => receivedRequest = request))
                 .Returns(oauthResponse);
 
-            var flow = new AzureAdClientCredentialsFlow(_serviceUri, _credentials, _requestParameters, httpAdapter);
+            var flow = new AzureAdClientCredentialsFlow(_serviceUri, _tokenRequest, httpAdapter);
 
             // Act
             flow.RequestAccessToken();
@@ -69,16 +67,16 @@ namespace TokenClient.Services.AzureAd.Tests
             httpAdapter.SendRequest(Arg.Do<ProtocolRequest>(request => receivedRequest = request))
                 .Returns(oauthResponse);
 
-            var flow = new AzureAdClientCredentialsFlow(_serviceUri, _credentials, _requestParameters, httpAdapter);
+            var flow = new AzureAdClientCredentialsFlow(_serviceUri, _tokenRequest, httpAdapter);
 
             flow.RequestAccessToken();
 
             httpAdapter.Received(1).SendRequest(Arg.Any<ProtocolRequest>());
 
             Assert.AreEqual(receivedRequest.BodyParameters["grant_type"], "client_credentials");
-            Assert.AreEqual(receivedRequest.BodyParameters["client_id"], _credentials.ClientId);
-            Assert.AreEqual(receivedRequest.BodyParameters["client_secret"], _credentials.ClientSecret);
-            Assert.AreEqual(receivedRequest.BodyParameters["resource"], _requestParameters.Resource);
+            Assert.AreEqual(receivedRequest.BodyParameters["client_id"], _tokenRequest.ClientId);
+            Assert.AreEqual(receivedRequest.BodyParameters["client_secret"], _tokenRequest.ClientSecret);
+            Assert.AreEqual(receivedRequest.BodyParameters["resource"], _tokenRequest.Scope);
         }
 
         [Test]
@@ -89,7 +87,7 @@ namespace TokenClient.Services.AzureAd.Tests
             IHttpClient httpAdapter = Substitute.For<IHttpClient>();
             httpAdapter.SendRequest(Arg.Any<ProtocolRequest>()).Returns(oauthResponse);
 
-            var flow = new AzureAdClientCredentialsFlow(_serviceUri, _credentials, _requestParameters, httpAdapter);
+            var flow = new AzureAdClientCredentialsFlow(_serviceUri, _tokenRequest, httpAdapter);
 
             JwtSecurityToken receivedToken = flow.RequestAccessToken() as JwtSecurityToken;
 
@@ -138,7 +136,7 @@ namespace TokenClient.Services.AzureAd.Tests
         {
             var token = new JwtSecurityToken(
                 _serviceUri.ToString(),
-                _requestParameters.Resource,
+                _tokenRequest.Scope,
                 null,
                 new Lifetime(DateTime.Now, DateTime.Now.AddMinutes(10)));
             return token;

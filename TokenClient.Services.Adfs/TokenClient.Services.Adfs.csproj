@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="AdfsConstants.cs" />
     <Compile Include="OAuth2\AdfsAuthorizationCodeFlow.cs" />
-    <Compile Include="OAuth2\AdfsClientCredentialsFlow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

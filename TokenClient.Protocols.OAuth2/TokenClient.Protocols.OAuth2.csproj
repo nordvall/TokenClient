@@ -52,6 +52,8 @@
   <ItemGroup>
     <Compile Include="AccessTokenErrorResponse.cs" />
     <Compile Include="AuthorizationCodeFlowBase.cs" />
+    <Compile Include="AuthorizationCodeTokenRequest.cs" />
+    <Compile Include="ClientCredentialsTokenRequest.cs" />
     <Compile Include="ClientCredentials.cs" />
     <Compile Include="ClientCredentialsFlowBase.cs" />
     <Compile Include="Http\OAuthHttpClient.cs" />

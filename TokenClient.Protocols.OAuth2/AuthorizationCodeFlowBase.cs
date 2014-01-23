@@ -18,22 +18,20 @@ namespace TokenClient.Protocols.OAuth2
     {
         protected string _accessCode;
         private readonly string _state;
-        protected readonly ClientCredentials _clientCredentials;
-        protected readonly RequestParameters _parameters;
+        protected readonly AuthorizationCodeTokenRequest _tokenRequest;
         protected readonly Uri _serviceUri;
         protected readonly IHttpClient _httpClient;
 
-        public AuthorizationCodeFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters)
-            : this(serviceUri, clientCredentials, parameters, new OAuthHttpClient())
+        public AuthorizationCodeFlowBase(Uri serviceUri, AuthorizationCodeTokenRequest tokenRequest)
+            : this(serviceUri, tokenRequest, new OAuthHttpClient())
         {
 
         }
 
-        public AuthorizationCodeFlowBase(Uri serviceUri, ClientCredentials clientCredentials, RequestParameters parameters, IHttpClient httpClient)
+        public AuthorizationCodeFlowBase(Uri serviceUri, AuthorizationCodeTokenRequest tokenRequest, IHttpClient httpClient)
         {
             _serviceUri = serviceUri;
-            _clientCredentials = clientCredentials;
-            _parameters = parameters;
+            _tokenRequest = tokenRequest;
             _httpClient = httpClient;
             _state = Guid.NewGuid().ToString("N");
         }
@@ -62,10 +60,10 @@ namespace TokenClient.Protocols.OAuth2
         {
             var parameters = new Dictionary<string, string>(5);
             parameters.Add("response_type", "code");
-            parameters.Add("client_id", _clientCredentials.ClientId);
-            parameters.Add("redirect_uri", _parameters.RedirectUri.ToString());
+            parameters.Add("client_id", _tokenRequest.ClientId);
+            parameters.Add("redirect_uri", _tokenRequest.RedirectUri.ToString());
             parameters.Add("state", FlowId);
-            parameters.Add("scope", _parameters.Scope);
+            parameters.Add("scope", _tokenRequest.Scope);
 
             return parameters;
         }
@@ -120,8 +118,8 @@ namespace TokenClient.Protocols.OAuth2
             var formParameters = new Dictionary<string, string>(4)
             {
                 {"response_type", "authorization_code"},
-                {"client_id", _clientCredentials.ClientId},
-                {"redirect_uri", _parameters.RedirectUri.ToString()},
+                {"client_id", _tokenRequest.ClientId},
+                {"redirect_uri", _tokenRequest.RedirectUri.ToString()},
                 {"code", _accessCode}
             };
 
@@ -147,7 +145,6 @@ namespace TokenClient.Protocols.OAuth2
             var oauthRequest = new ProtocolRequest()
             {
                 BodyParameters = parameters,
-                Method = HttpMethod.Post,
                 Url = new UrlParts(TokenRequestEndpoint)
             };
 

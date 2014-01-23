@@ -12,26 +12,26 @@ namespace TokenClient.Services.Acs.OAuth2
 {
     public class AcsAuthorizationCodeFlow : AuthorizationCodeFlowBase
     {
-        public AcsAuthorizationCodeFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters)
-            : base(serviceUri, credentials, parameters)
+        public AcsAuthorizationCodeFlow(Uri serviceUri, AuthorizationCodeTokenRequest tokenRequest)
+            : base(serviceUri, tokenRequest)
         {
 
         }
 
-        public AcsAuthorizationCodeFlow(Uri serviceUri, ClientCredentials credentials, RequestParameters parameters, IHttpClient httpAdapter)
-            : base(serviceUri, credentials, parameters, httpAdapter)
+        public AcsAuthorizationCodeFlow(Uri serviceUri, AuthorizationCodeTokenRequest tokenRequest, IHttpClient httpAdapter)
+            : base(serviceUri, tokenRequest, httpAdapter)
         {
 
         }
 
         protected override Uri AuthorizationEndpoint
         {
-            get { return new Uri(_serviceUri, AcsConstants.OAuthUrlPath); }
+            get { return new Uri(_serviceUri, AcsConstants.OAuth2UrlPath); }
         }
 
         protected override Uri TokenRequestEndpoint
         {
-            get { return new Uri(_serviceUri, AcsConstants.OAuthUrlPath); }
+            get { return new Uri(_serviceUri, AcsConstants.OAuth2UrlPath); }
         }
 
         protected override Dictionary<string, string> GetAuthorizationRequestParameters()

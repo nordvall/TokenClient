@@ -47,8 +47,7 @@ namespace TokenClient.Common.Tests
         {
             var oauthRequest = new ProtocolRequest()
             {
-                Url = new UrlParts(requestUri),
-                Method = method
+                Url = new UrlParts(requestUri)
             };
 
             foreach (string key in parameters.Keys)

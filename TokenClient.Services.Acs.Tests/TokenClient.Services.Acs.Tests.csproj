@@ -58,7 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AcsClientCredentialsFlowTests.cs" />
+    <Compile Include="OAuth2\AcsClientCredentialsFlowTests.cs" />
+    <Compile Include="OAuthWrap\AcsClientAccountPasswordFlowTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +70,10 @@
     <ProjectReference Include="..\TokenClient.Protocols.OAuth2\TokenClient.Protocols.OAuth2.csproj">
       <Project>{7db1ace4-d525-4411-a7eb-b25325dce9bb}</Project>
       <Name>TokenClient.Protocols.OAuth2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TokenClient.Protocols.OAuthWrap\TokenClient.Protocols.OAuthWrap.csproj">
+      <Project>{7fe8782c-1bc6-495a-b276-785ba79e5444}</Project>
+      <Name>TokenClient.Protocols.OAuthWrap</Name>
     </ProjectReference>
     <ProjectReference Include="..\TokenClient.Services.Acs\TokenClient.Services.Acs.csproj">
       <Project>{92ddd3ae-0cdb-43aa-862a-e9acc52dba50}</Project>
