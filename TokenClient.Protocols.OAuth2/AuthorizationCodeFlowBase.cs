@@ -117,8 +117,9 @@ namespace TokenClient.Protocols.OAuth2
         {
             var formParameters = new Dictionary<string, string>(4)
             {
-                {"response_type", "authorization_code"},
+                {"grant_type", "authorization_code"},
                 {"client_id", _tokenRequest.ClientId},
+                {"client_secret", _tokenRequest.ClientSecret},
                 {"redirect_uri", _tokenRequest.RedirectUri.ToString()},
                 {"code", _accessCode}
             };

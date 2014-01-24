@@ -41,7 +41,10 @@ namespace TokenClient.Services.Acs.OAuth2
 
         protected override Dictionary<string, string> CreateAccessTokenRequestParameters()
         {
-            return base.CreateAccessTokenRequestParameters();
+            Dictionary<string, string> parameters = base.CreateAccessTokenRequestParameters();
+            parameters.Add("scope", _tokenRequest.Scope);
+
+            return parameters;
         }
     }
 }
