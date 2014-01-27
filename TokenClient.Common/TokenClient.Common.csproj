@@ -63,6 +63,7 @@
     <Compile Include="Tokens\SwtSecurityTokenConstants.cs" />
     <Compile Include="Tokens\SwtSecurityTokenHandler.cs" />
     <Compile Include="Tokens\SwtSecurityTokenKeyIdentifierClause.cs" />
+    <Compile Include="Tokens\WebToken.cs" />
     <Compile Include="UrlParts.cs" />
   </ItemGroup>
   <ItemGroup>

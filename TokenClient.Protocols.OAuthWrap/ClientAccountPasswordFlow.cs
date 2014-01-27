@@ -17,6 +17,7 @@ namespace TokenClient.Protocols.OAuthWrap
         protected readonly ClientAccountPasswordTokenRequest _tokenRequest;
         protected readonly Uri _serviceUri;
         protected readonly IHttpClient _httpClient;
+        private WebToken _cachedToken;
 
         public ClientAccountPasswordFlow(Uri serviceUri, ClientAccountPasswordTokenRequest tokenRequest)
             : this(serviceUri, tokenRequest, new WrapHttpClient())
@@ -48,27 +49,34 @@ namespace TokenClient.Protocols.OAuthWrap
 
         protected string RequestAccessToken()
         {
-            Dictionary<string, string> bodyParameters = CreateAccessTokenRequestParameters();
-
-            UrlParts url = new UrlParts(TokenEndpoint)
+            if (_cachedToken == null || _cachedToken.Expiration < DateTime.Now.AddMinutes(-1))
             {
-                Path = TokenEndpoint.AbsolutePath
-            };
+                Dictionary<string, string> bodyParameters = CreateAccessTokenRequestParameters();
 
-            ProtocolRequest oauthRequest = CreateProtocolRequest(url, bodyParameters);
+                UrlParts url = new UrlParts(TokenEndpoint)
+                {
+                    Path = TokenEndpoint.AbsolutePath
+                };
 
-            ProtocolResponse oauthResponse = _httpClient.SendRequest(oauthRequest);
+                ProtocolRequest oauthRequest = CreateProtocolRequest(url, bodyParameters);
 
-            string tokenString = ExtractSecurityTokenFromResponse(oauthResponse);
+                ProtocolResponse oauthResponse = _httpClient.SendRequest(oauthRequest);
 
-            return tokenString;
+                _cachedToken = ExtractSecurityTokenFromResponse(oauthResponse);
+            }
+
+            return _cachedToken.Token;
         }
 
-        protected virtual string ExtractSecurityTokenFromResponse(ProtocolResponse oauthResponse)
+        protected virtual WebToken ExtractSecurityTokenFromResponse(ProtocolResponse oauthResponse)
         {
-            string tokenType = oauthResponse.BodyParameters["wrap_access_token_expires_in"];
+            string lifetime = oauthResponse.BodyParameters["wrap_access_token_expires_in"];
             string accessTokenString = oauthResponse.BodyParameters["wrap_access_token"];
-            return accessTokenString;
+
+            var token = new WebToken(accessTokenString);
+            token.Expiration.AddSeconds(int.Parse(lifetime));
+            
+            return token;
         }
 
         protected virtual ProtocolRequest CreateProtocolRequest(UrlParts requestUrl, Dictionary<string, string> parameters)
