@@ -49,7 +49,7 @@ namespace TokenClient.Protocols.OAuthWrap
 
         protected string RequestAccessToken()
         {
-            if (_cachedToken == null || _cachedToken.Expiration < DateTime.Now.AddMinutes(-1))
+            if (_cachedToken == null || _cachedToken.Expiration < DateTime.Now.AddMinutes(1))
             {
                 Dictionary<string, string> bodyParameters = CreateAccessTokenRequestParameters();
 
