@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using TokenClient.Common;
+using TokenClient.Common.Tokens;
 using TokenClient.Protocols.OAuth2.Http;
 
 namespace TokenClient.Protocols.OAuth2
@@ -21,6 +22,7 @@ namespace TokenClient.Protocols.OAuth2
         protected readonly AuthorizationCodeTokenRequest _tokenRequest;
         protected readonly Uri _serviceUri;
         protected readonly IHttpClient _httpClient;
+        private WebToken _cachedToken;
 
         public AuthorizationCodeFlowBase(Uri serviceUri, AuthorizationCodeTokenRequest tokenRequest)
             : this(serviceUri, tokenRequest, new OAuthHttpClient())
@@ -73,7 +75,10 @@ namespace TokenClient.Protocols.OAuth2
             var urlParts = new UrlParts(resultUrl);
 
             string state = GetStateValueFromParameters(urlParts.QueryParameters);
-            VerifyStateParameter(state);
+            if (!string.IsNullOrEmpty(state))
+            {
+                VerifyStateParameter(state);
+            }
 
             string code = GetAuthorizationCodeFromParameters(urlParts.QueryParameters);
 
@@ -92,7 +97,14 @@ namespace TokenClient.Protocols.OAuth2
 
         protected virtual string GetStateValueFromParameters(Dictionary<string, string> parameters)
         {
-            return parameters["state"];
+            if (parameters.ContainsKey("state"))
+            {
+                return parameters["state"];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         protected virtual void VerifyStateParameter(string state)
@@ -103,19 +115,37 @@ namespace TokenClient.Protocols.OAuth2
             }
         }
 
+        public string GetAccessTokenAsString()
+        {
+            string tokenString = RequestAccessToken();
+            return tokenString;
+        }
+
+        private string RequestAccessToken()
+        {
+            if (_cachedToken == null || _cachedToken.Expiration < DateTime.Now.AddMinutes(1))
+            {
+                Dictionary<string, string> parameters = CreateAccessTokenRequestParameters();
+                ProtocolRequest oauthRequest = CreateProtocolRequest(parameters);
+                ProtocolResponse oauthResponse = _httpClient.SendRequest(oauthRequest);
+
+                _cachedToken = ExtractSecurityTokenFromResponse(oauthResponse);
+            }
+
+            return _cachedToken.Token;
+        }
+
         public SecurityToken GetAccessToken()
         {
-            Dictionary<string, string> parameters = CreateAccessTokenRequestParameters();
-            ProtocolRequest oauthRequest = CreateProtocolRequest(parameters);
-            ProtocolResponse oauthResponse = _httpClient.SendRequest(oauthRequest);
-            SecurityToken token = CreateSecurityToken(oauthResponse);
+            string tokenString = RequestAccessToken();
+            var token = new JwtSecurityToken(tokenString);
 
             return token;
         }
 
         protected virtual Dictionary<string, string> CreateAccessTokenRequestParameters()
         {
-            var formParameters = new Dictionary<string, string>(4)
+            var formParameters = new Dictionary<string, string>()
             {
                 {"grant_type", "authorization_code"},
                 {"client_id", _tokenRequest.ClientId},
@@ -132,12 +162,14 @@ namespace TokenClient.Protocols.OAuth2
             get { return new Uri(_serviceUri, "token"); }
         }
 
-        protected virtual SecurityToken CreateSecurityToken(ProtocolResponse oauthResponse)
+        protected virtual WebToken ExtractSecurityTokenFromResponse(ProtocolResponse oauthResponse)
         {
             string tokenType = oauthResponse.BodyParameters["token_type"];
             string accessTokenString = oauthResponse.BodyParameters["access_token"];
+            string lifetime = oauthResponse.BodyParameters["expires_in"];
 
-            var token = new JwtSecurityToken(accessTokenString);
+            var token = new WebToken(accessTokenString);
+            token.Expiration.AddSeconds(int.Parse(lifetime));
             return token;
         }
 
